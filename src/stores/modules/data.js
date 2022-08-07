@@ -12,6 +12,7 @@ export default {
       return state.lists;
     },
     CURATED_LISTS: (state, getters, rootState) => {
+      console.log(state.lists, 'data')
       if (!state.curatedLists.length && rootState.search.listSearch === "") {
         return state.lists;
       } else if (
@@ -21,11 +22,6 @@ export default {
         return state.curatedLists;
       } else if (rootState.search.listSearch === "") {
         return state.curatedLists;
-      }
-    },
-    TASKS_COUNT: state => index => {
-      if (index) {
-        return state.lists.find(list => list.id === index).tasks.length;
       }
     },
     LIST_TITLE: state => index => {
@@ -179,24 +175,34 @@ export default {
   },
   actions: {
     GET_LISTS: async ({ commit }) => {
-      let { data } = await axios.get(`lists`);
-      commit("SET_LISTS", data);
+      fetch(process.env.VUE_APP_API_ENDPOINT + "user/feed/get", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      })
+        .then(async (response) => {
+          if (response.ok) {
+            const data = await response.json();
+            commit("SET_LISTS", data.quotes);
+          }
+          
+        })
     },
-    POST_LIST: ({ commit }, payload) => {
-      return new Promise((resolve, reject) => {
-        axios
-          .post(`lists`, payload)
-          .then(({ data, status }) => {
-            commit("ADD_LIST", data);
-            if (status === 200 || status === 201) {
-              resolve({ data, status });
-            }
-          })
-          .catch(error => {
-            reject(error);
-          });
-      });
-    },
+    // POST_LIST: ({ commit }, payload) => {
+    //   return new Promise((resolve, reject) => {
+    //     axios
+    //       .post(`lists`, payload)
+    //       .then(({ data, status }) => {
+    //         commit("ADD_LIST", data);
+    //         if (status === 200 || status === 201) {
+    //           resolve({ data, status });
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.log(error)
+    //         reject(error);
+    //       });
+    //   });
+    // },
     GET_TASKS: async ({ commit, state }, payload) => {
       let { data } = await axios.get(`lists/${payload}/tasks`);
       commit("SET_TASKS", {

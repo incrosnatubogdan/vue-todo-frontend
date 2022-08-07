@@ -17,7 +17,7 @@ Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
 
-axios.defaults.baseURL = "http://localhost:8000/api/";
+axios.defaults.baseURL = "http://localhost:8081/api/";
 axios.defaults.withCredentials = true;
 
 const routes = [
@@ -71,6 +71,7 @@ axios.interceptors.response.use(
       router.push({ name: "login" });
       return Promise.reject(false);
     }
+
 
     if (originalRequest.url.includes("login_check")) {
       return Promise.reject(err);

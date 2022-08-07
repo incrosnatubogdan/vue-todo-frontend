@@ -29,16 +29,13 @@
     <v-divider></v-divider>
     <v-list style="height: calc(100% - 128px); overflow-y: scroll">
       <v-list-tile
-        :to="{ name: 'tasks', params: { id: list.id} }"
+        :to="{ name: 'tasks', params: { id: list._id} }"
         v-for="(list, key) in CURATED_LISTS"
         v-bind:key="key"
       >
         <v-list-tile-content>
-          <v-list-tile-title>{{ list.title }}</v-list-tile-title>
+          <v-list-tile-title>{{ list.description }}</v-list-tile-title>
         </v-list-tile-content>
-        <v-list-tile-action>
-          <v-list-tile-title>{{ TASKS_COUNT(list.id) }}</v-list-tile-title>
-        </v-list-tile-action>
       </v-list-tile>
     </v-list>
   </v-navigation-drawer>
@@ -74,9 +71,6 @@ export default {
       openNewListForm() {
           this.$store.commit("SET_NEW_LIST_FORM", true);
       },
-      TASKS_COUNT(index) {
-        return this.$store.getters.TASKS_COUNT(index);
-      }
   },
    mounted () {
      this.$store.dispatch("GET_LISTS");
